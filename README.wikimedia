@@ -53,3 +53,10 @@ Minor bugfix for CVS HEAD: fix links to removed module AgentTicketMailbox.
 --------------------------------
 Temporary fix for http://bugs.otrs.org/show_bug.cgi?id=3641 , probably doesn't 
 work if customer logins are allowed.
+
+90-add-X-Spam-Score-header.patch
+--------------------------------
+Fix for <https://bugzilla.wikimedia.org/show_bug.cgi?id=43665>. Adds support
+for filtering on X-Spam-Score e-mail header.
+
+Submitted upstream at <http://bugs.otrs.org/show_bug.cgi?id=9042>.
