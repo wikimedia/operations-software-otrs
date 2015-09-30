@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.1">
-    <Name>Znuny4OTRS-WikimediaDTL</Name>
+    <Name>WikimediaTemplates</Name>
     <Version>1.0.3</Version>
-    <Vendor>Znuny GmbH</Vendor>
-    <URL>http://znuny.com/</URL>
+    <Vendor>Wikimedia Foundation, Incl.</Vendor>
+    <URL>https://wikitech.wikimedia.org/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
-    <Description Lang="en">wikimedia changes to .dtl</Description>
+    <Description Lang="en">Wikimedia changes to .dtl</Description>
     <Framework>3.2.x</Framework>
     <IntroInstall Lang="en" Title="Pre-Install Information" Type="pre">
         &lt;br/&gt;
         &lt;br/&gt;
-        Welcome to &lt;u&gt;Znuny4OTRS Wikimedia DTL Changes&lt;/u&gt;!
+        Welcome to &lt;u&gt;Wikimedia DTL Changes&lt;/u&gt;!
         &lt;br/&gt;
         &lt;br/&gt;
         &lt;p&gt;
@@ -21,16 +21,6 @@
         &lt;p&gt;Notice: Changes in AgentTicketZoom.dtl due to disabled Customer Information Center&lt;/p&gt;
 		&lt;p&gt;Notice: Changes in AgentDashboardUserOnline.dtl to show username&lt;/p&gt;
 		&lt;p&gt;Notice: Changes in AgentDashboardUserOnline.dtl to show username&lt;/p&gt;
-		&lt;br/&gt;
-		&lt;br/&gt;
-		&lt;p&gt;&lt;strong&gt;A special THANK YOU to Jeff &amp; Maggie for all the help!! ;-)&lt;/strong&gt;&lt;/p&gt;
-        &lt;br/&gt;
-        &lt;br/&gt;
-        &lt;p&gt;
-        Your Znuny Team!
-        &lt;br/&gt;
-        &lt;a href=&quot;http://znuny.com/&quot; target=&quot;_blank&quot;&gt;http://znuny.com&lt;/a&gt;
-        &lt;/p&gt;
         &lt;br/&gt;
         &lt;br/&gt;
     </IntroInstall>
