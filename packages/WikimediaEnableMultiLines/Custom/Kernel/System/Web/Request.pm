@@ -1,6 +1,6 @@
 # --
 # Kernel/System/Web/Request.pm - a wrapper for CGI.pm or Apache::Request.pm
-# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
+# Copyright (C) 2001-2015 OTRS AG, http://otrs.com/
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -12,9 +12,15 @@ package Kernel::System::Web::Request;
 use strict;
 use warnings;
 
+use CGI ();
+use CGI::Carp;
 use File::Path qw();
 
-use Kernel::System::CheckItem;
+our @ObjectDependencies = (
+    'Kernel::Config',
+    'Kernel::System::CheckItem',
+    'Kernel::System::Encode',
+);
 
 =head1 NAME
 
@@ -32,34 +38,15 @@ All cgi param functions.
 
 =item new()
 
-create param object
+create param object. Do not use it directly, instead use:
 
-    use Kernel::Config;
-    use Kernel::System::Encode;
-    use Kernel::System::Log;
-    use Kernel::System::Main;
-    use Kernel::System::Web::Request;
-
-    my $ConfigObject = Kernel::Config->new();
-    my $EncodeObject = Kernel::System::Encode->new(
-        ConfigObject => $ConfigObject,
+    use Kernel::System::ObjectManager;
+    local $Kernel::OM = Kernel::System::ObjectManager->new(
+        'Kernel::System::Web::Request' => {
+            WebRequest   => CGI::Fast->new(), # optional, e. g. if fast cgi is used
+        }
     );
-    my $LogObject = Kernel::System::Log->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-    );
-    my $MainObject = Kernel::System::Main->new(
-        ConfigObject => $ConfigObject,
-        EncodeObject => $EncodeObject,
-        LogObject    => $LogObject,
-    );
-    my $ParamObject = Kernel::System::Web::Request->new(
-        ConfigObject => $ConfigObject,
-        LogObject    => $LogObject,
-        EncodeObject => $EncodeObject,
-        MainObject   => $MainObject,
-        WebRequest   => CGI::Fast->new(), # optional, e. g. if fast cgi is used
-    );
+    my $ParamObject = $Kernel::OM->Get('Kernel::System::Web::Request');
 
 If Kernel::System::Web::Request is instantiated several times, they will share the
 same CGI data (this can be helpful in filters which do not have access to the
@@ -80,22 +67,23 @@ sub new {
     my $Self = {};
     bless( $Self, $Type );
 
-    for my $Object (qw(ConfigObject LogObject EncodeObject MainObject)) {
-        $Self->{$Object} = $Param{$Object} || die "Got no $Object!";
-    }
-    $Self->{CheckItemObject} = Kernel::System::CheckItem->new( %{$Self} );
-
-    # Simple Common Gateway Interface Class
-    use CGI qw(:cgi);
-
-    # send errors to web server error log
-    use CGI::Carp;
+    # get config object
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
 
     # max 5 MB posts
-    $CGI::POST_MAX = $Self->{ConfigObject}->Get('WebMaxFileUpload') || 1024 * 1024 * 5; ## no critic
+    $CGI::POST_MAX = $ConfigObject->Get('WebMaxFileUpload') || 1024 * 1024 * 5;    ## no critic
+
+    # we need to modify the tempdir
+    # for windows because the users
+    # group do not have enough rights
+    # for the default tempdir c:\windows\temp
+    # so we use a directory in otrs as tempdir (bug#10522)
+    if ( $^O eq 'MSWin32' ) {
+        $CGITempFile::TMPDIRECTORY = $ConfigObject->Get('TempDir');
+    }
 
     # query object (in case use already existing WebRequest, e. g. fast cgi)
-    $Self->{Query} = $Param{WebRequest} || new CGI;
+    $Self->{Query} = $Param{WebRequest} || CGI->new();
 
     return $Self;
 }
@@ -119,8 +107,10 @@ sub Error {
         return;
     }
 
-    return if !cgi_error();
-    return cgi_error() . ' - POST_MAX=' . ( $CGI::POST_MAX / 1024 ) . 'KB';    ## no critic
+    return if !$Self->{Query}->cgi_error();
+    ## no critic
+    return $Self->{Query}->cgi_error() . ' - POST_MAX=' . ( $CGI::POST_MAX / 1024 ) . 'KB';
+    ## use critic
 }
 
 =item GetParam()
@@ -139,7 +129,7 @@ sub GetParam {
     my ( $Self, %Param ) = @_;
 
     my $Value = $Self->{Query}->param( $Param{Param} );
-    $Self->{EncodeObject}->EncodeInput( \$Value );
+    $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$Value );
 
     my $Raw = defined $Param{Raw} ? $Param{Raw} : 0;
 
@@ -153,7 +143,7 @@ sub GetParam {
 
         # If it is a plain string, perform trimming
         if ( ref \$Value eq 'SCALAR' ) {
-            $Self->{CheckItemObject}->StringClean(
+            $Kernel::OM->Get('Kernel::System::CheckItem')->StringClean(
                 StringRef => \$Value,
                 TrimLeft  => 1,
                 TrimRight => 1,
@@ -188,7 +178,7 @@ sub GetParamNames {
 
     # is encode needed?
     for my $Name (@ParamNames) {
-        $Self->{EncodeObject}->EncodeInput( \$Name );
+        $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$Name );
     }
 
     return @ParamNames;
@@ -210,13 +200,18 @@ sub GetArray {
     my ( $Self, %Param ) = @_;
 
     my @Values = $Self->{Query}->param( $Param{Param} );
-    $Self->{EncodeObject}->EncodeInput( \@Values );
+
+    $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \@Values );
 
     my $Raw = defined $Param{Raw} ? $Param{Raw} : 0;
 
     if ( !$Raw ) {
+
+        # get check item object
+        my $CheckItemObject = $Kernel::OM->Get('Kernel::System::CheckItem');
+
         for my $Value (@Values) {
-            $Self->{CheckItemObject}->StringClean(
+            $CheckItemObject->StringClean(
                 StringRef => \$Value,
                 TrimLeft  => 1,
                 TrimRight => 1,
@@ -233,7 +228,6 @@ gets file upload data.
 
     my %File = $ParamObject->GetUploadAll(
         Param  => 'FileParam',  # the name of the request parameter containing the file data
-        Source => 'string',     # 'string' or 'file', how the data is stored/returned, see below
     );
 
     returns (
@@ -241,10 +235,6 @@ gets file upload data.
         ContentType => 'text/plain',
         Content     => 'Some text',
     );
-
-    If you send Source => 'string', the data will be returned directly in
-    the return value ('Content'). If you send 'file' instead, the data
-    will be stored in a file and 'Content' will just return the file name.
 
 =cut
 
@@ -259,7 +249,7 @@ sub GetUploadAll {
     my $UploadFilenameOrig = $Self->GetParam( Param => $Param{Param} ) || 'unkown';
 
     my $NewFileName = "$UploadFilenameOrig";    # use "" to get filename of anony. object
-    $Self->{EncodeObject}->EncodeInput( \$NewFileName );
+    $Kernel::OM->Get('Kernel::System::Encode')->EncodeInput( \$NewFileName );
 
     # replace all devices like c: or d: and dirs for IE!
     $NewFileName =~ s/.:\\(.*)/$1/g;
@@ -267,34 +257,10 @@ sub GetUploadAll {
 
     # return a string
     my $Content;
-    if ( $Param{Source} && lc $Param{Source} eq 'string' ) {
-
-        while (<$Upload>) {
-            $Content .= $_;
-        }
-        close $Upload;
+    while (<$Upload>) {
+        $Content .= $_;
     }
-
-    # return file location in file system
-    else {
-
-        # delete upload dir if exists
-        my $Path = "/tmp/$$";
-        if ( -d $Path ) {
-            File::Path::remove_tree($Path);
-        }
-
-        # create upload dir
-        File::Path::make_path( $Path, { mode => 0700 } );    ## no critic
-
-        $Content = "$Path/$NewFileName";
-
-        open my $Out, '>', $Content || die $!;               ## no critic
-        while (<$Upload>) {
-            print $Out $_;
-        }
-        close $Out;
-    }
+    close $Upload;
 
     # Check if content is there, IE is always sending file uploads without content.
     return if !$Content;
@@ -335,7 +301,9 @@ set a cookie
         Key     => ID,
         Value   => 123456,
         Expires => '+3660s',
+        Path    => 'otrs/',     # optional, only allow cookie for given path
         Secure  => 1,           # optional, set secure attribute to disable cookie on HTTP (HTTPS only)
+        HTTPOnly => 1,          # optional, sets HttpOnly attribute of cookie to prevent access via JavaScript
     );
 
 =cut
@@ -343,11 +311,15 @@ set a cookie
 sub SetCookie {
     my ( $Self, %Param ) = @_;
 
+    $Param{Path} ||= '';
+
     return $Self->{Query}->cookie(
-        -name    => $Param{Key},
-        -value   => $Param{Value},
-        -expires => $Param{Expires},
-        -secure  => $Param{Secure},
+        -name     => $Param{Key},
+        -value    => $Param{Value},
+        -expires  => $Param{Expires},
+        -secure   => $Param{Secure} || '',
+        -httponly => $Param{HTTPOnly} || '',
+        -path     => '/' . $Param{Path},
     );
 }
 
@@ -365,6 +337,20 @@ sub GetCookie {
     my ( $Self, %Param ) = @_;
 
     return $Self->{Query}->cookie( $Param{Key} );
+}
+
+=item IsAJAXRequest()
+
+checks if the current request was sent by AJAX
+
+    my $IsAJAXRequest = $ParamObject->IsAJAXRequest();
+
+=cut
+
+sub IsAJAXRequest {
+    my ( $Self, %Param ) = @_;
+
+    return ( $Self->{Query}->http('X-Requested-With') // '' ) eq 'XMLHttpRequest' ? 1 : 0;
 }
 
 1;
