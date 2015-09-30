@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<otrs_package version="1.1">
+    <Name>WikimediaEnableMultiLines</Name>
+    <Version>1.0.1</Version>
+    <Vendor>Znuny GmbH</Vendor>
+    <URL>http://znuny.com/</URL>
+    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+    <Description Lang="en">Enable blank multi lines in salutation, siganture and responses.</Description>
+    <Framework>3.2.x</Framework>
+    <Filelist>
+        <File Location="Custom/Kernel/System/Web/Request.pm" Permission="644"></File>
+    </Filelist>
+</otrs_package>
