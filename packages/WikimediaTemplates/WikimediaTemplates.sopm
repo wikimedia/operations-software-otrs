@@ -26,8 +26,8 @@
     </IntroInstall>
     <PackageRequired Version="1.0.0">Znuny4OTRS-Repo</PackageRequired>
     <Filelist>
-        <File Location="Kernel/Output/HTML/Standard/AgentDashboardUserOnline.tt" Permission="644"></File>
-        <File Location="Kernel/Output/HTML/Standard/AgentTicketZoom.tt" Permission="644"></File>
-        <File Location="Kernel/Output/HTML/Standard/AgentDashboardUserOutOfOffice.tt" Permission="644"></File>
+        <File Location="Custom/Kernel/Output/HTML/Standard/AgentDashboardUserOnline.tt" Permission="644"></File>
+        <File Location="Custom/Kernel/Output/HTML/Standard/AgentTicketZoom.tt" Permission="644"></File>
+        <File Location="Custom/Kernel/Output/HTML/Standard/AgentDashboardUserOutOfOffice.tt" Permission="644"></File>
     </Filelist>
 </otrs_package>
