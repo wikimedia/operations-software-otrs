@@ -1,0 +1,135 @@
+# --
+# AgentDashboardUserOnline.tt - provides HTML for global dashboard
+# Copyright (C) 2001-2015 OTRS AG, http://otrs.com/
+# --
+# This software comes with ABSOLUTELY NO WARRANTY. For details, see
+# the enclosed file COPYING for license information (AGPL). If you
+# did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
+# --
+
+[% RenderBlockStart("ContentSmallUserOnlineFilter") %]
+<ul class="UserFilter Tab Actions">
+    <li class="[% Data.item("Agent::Selected") | html %]"><a href="#" id="Dashboard[% Data.Name | html %]Agent" class="[% Data.item("Agent::Selected") | html %]">[% Translate("Agents") | html %] ([% Data.Agent | html %])</a></li>
+    <li class="[% Data.item("Customer::Selected") | html %]"><a href="#" id="Dashboard[% Data.Name | html %]Customer" class="[% Data.item("Customer::Selected") | html %]">[% Translate("Customers") | html %] ([% Data.Customer | html %])</a></li>
+</ul>
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+    $('#Dashboard[% Data.Name | html %]Agent').unbind('click').bind('click', function(){
+        Core.AJAX.ContentUpdate($('#Dashboard[% Data.Name | html %]'), '[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Element;Name=[% Data.Name | html %];Filter=Agent', function () {
+            Core.UI.Table.InitCSSPseudoClasses($('#Dashboard[% Data.Name | html %]'));
+        });
+        return false;
+    });
+    $('#Dashboard[% Data.Name | html %]Customer').unbind('click').bind('click', function(){
+        Core.AJAX.ContentUpdate($('#Dashboard[% Data.Name | html %]'), '[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Element;Name=[% Data.Name | html %];Filter=Customer', function () {
+            Core.UI.Table.InitCSSPseudoClasses($('#Dashboard[% Data.Name | html %]'));
+        });
+        return false;
+    });
+//]]></script>
+[% END %]
+[% RenderBlockStart("ContentSmallTicketGenericFilterNavBar") %]
+<span class="Pagination">
+    [% Data.SiteNavBar %]
+</span>
+[% RenderBlockEnd("ContentSmallTicketGenericFilterNavBar") %]
+
+[% RenderBlockEnd("ContentSmallUserOnlineFilter") %]
+<table class="DataTable DashboardUserOnline">
+    <tbody>
+[% RenderBlockStart("ContentSmallUserOnlineRow") %]
+        <tr>
+            <td>
+                <p title="[% Data.UserEmail | html %]" class="UserRow">
+                [% IF Data.UserCustomerID %]
+                    <a href="[% Env("Baselink") %]Action=AgentCustomerInformationCenter;CustomerID=[% Data.UserCustomerID | uri %]">
+                [% ELSE %]
+                        <span>
+                [% END %]
+                        [% Data.UserFullname | html %]
+[% RenderBlockStart("ContentSmallUserOnlineRowEmail") %]
+                            ([% Data.UserEmail | truncate(50) | html %])
+[% RenderBlockEnd("ContentSmallUserOnlineRowEmail") %]
+[% RenderBlockStart("ContentSmallUserOnlineRowOutOfOffice") %]
+[% RenderBlockEnd("ContentSmallUserOnlineRowOutOfOffice") %]
+                [% IF Data.UserCustomerID %]
+                        </a>
+                [% ELSE %]
+                    </span>
+                [% END %]
+                [% IF Data.AgentEnableChat && Data.UserID != Env('UserID') %]
+                    <a href="#" title="[% Translate('Start chat') | html %]" type="button" class="DashboardUserOnlineChatStart" data-user-id="[% Data.UserID | html %]" data-user-type="[% Data.UserType.replace('Agent', 'User') | html %]" data-user-fullname="[% Data.UserFullname | html %]"><i class="fa fa-comments"></i></a>
+                [% END %]
+                </p>
+            </td>
+            <td>
+                <p title="[% Data.UserLogin | html %]" class="UserRow">
+                    <span>
+                        [% Data.UserLogin | html %]
+                    </span>
+                </p>
+            </td>
+        </tr>
+[% RenderBlockEnd("ContentSmallUserOnlineRow") %]
+[% RenderBlockStart("ContentSmallUserOnlineNone") %]
+        <tr>
+            <td>
+                [% Translate("none") | html %]
+            </td>
+        </tr>
+[% RenderBlockEnd("ContentSmallUserOnlineNone") %]
+    </tbody>
+</table>
+
+[% INCLUDE "ChatStartForm.tt" %]
+
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+$('a.DashboardUserOnlineChatStart').off('click').on('click', function() {
+    var UserID = $(this).data('user-id'),
+        $Dialog = $('#DashboardUserOnlineChatStartDialog').clone();
+
+    $Dialog.find('input[name=ChatStartUserID]').val($(this).data('user-id'));
+    $Dialog.find('input[name=ChatStartUserType]').val($(this).data('user-type'));
+    $Dialog.find('input[name=ChatStartUserFullname]').val($(this).data('user-fullname'));
+
+    Core.UI.Dialog.ShowContentDialog($Dialog.html(), [% Translate('Start chat') | JSON %], '100px', 'Center', true);
+
+    // Only enable button if there is a message
+    $('.Dialog textarea[name="ChatStartFirstMessage"]').on('keyup', function(){
+        $('.Dialog button').prop('disabled', $(this).val().length ? false : true );
+    });
+
+    $('.Dialog form').on('submit', function(){
+        if (!$('.Dialog textarea[name=ChatStartFirstMessage]').val().length) {
+            return false;
+        }
+        // Close after submit
+        window.setTimeout(function(){
+            Core.UI.Dialog.CloseDialog($('.Dialog'));
+        }, 1);
+    });
+
+    return false;
+});
+//]]></script>
+[% END %]
+
+[% RenderBlockStart("ContentSmallUserOnlineRefresh") %]
+[% WRAPPER JSOnDocumentComplete %]
+<script type="text/javascript">//<![CDATA[
+Core.Config.Set('RefreshSeconds_[% Data.NameHTML | html %]', parseInt("[% Data.RefreshTime | html %]", 10) || 0);
+if (Core.Config.Get('RefreshSeconds_[% Data.NameHTML | html %]')) {
+    Core.Config.Set('Timer_[% Data.NameHTML | html %]', window.setTimeout(function() {
+
+        $('#Dashboard[% Data.Name | html %]-box').addClass('Loading');
+        Core.AJAX.ContentUpdate($('#Dashboard[% Data.Name | html %]'), '[% Env("Baselink") %]Action=[% Env("Action") %];Subaction=Element;Name=[% Data.Name | html %]', function () {
+            Core.UI.Table.InitCSSPseudoClasses($('#Dashboard[% Data.Name | html %]'));
+            $('#Dashboard[% Data.Name | html %]-box').removeClass('Loading');
+        });
+        clearTimeout(Core.Config.Get('Timer_[% Data.NameHTML | html %]'));
+    }, Core.Config.Get('RefreshSeconds_[% Data.NameHTML | html %]') * 1000));
+}
+//]]></script>
+[% END %]
+[% RenderBlockEnd("ContentSmallUserOnlineRefresh") %]

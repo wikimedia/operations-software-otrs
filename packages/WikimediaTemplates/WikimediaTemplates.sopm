@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.1">
     <Name>WikimediaTemplates</Name>
-    <Version>1.0.3</Version>
-    <Vendor>Wikimedia Foundation, Incl.</Vendor>
+    <Version>1.0.4</Version>
+    <Vendor>Wikimedia Foundation, Inc.</Vendor>
     <URL>https://wikitech.wikimedia.org/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
-    <Description Lang="en">Wikimedia changes to .dtl</Description>
-    <Framework>3.2.x</Framework>
+    <Description Lang="en">Wikimedia changes to templates</Description>
+    <Framework>4.0.x</Framework>
     <IntroInstall Lang="en" Title="Pre-Install Information" Type="pre">
         &lt;br/&gt;
         &lt;br/&gt;
-        Welcome to &lt;u&gt;Wikimedia DTL Changes&lt;/u&gt;!
+        Welcome to &lt;u&gt;Wikimedia Template Changes&lt;/u&gt;!
         &lt;br/&gt;
         &lt;br/&gt;
         &lt;p&gt;
-        You are about to install DTL Changes to your OTRS System:
+        You are about to install Template (TT) changes to your OTRS System:
         &lt;/p&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        &lt;p&gt;Notice: Changes in AgentTicketZoom.dtl due to disabled Customer Information Center&lt;/p&gt;
-		&lt;p&gt;Notice: Changes in AgentDashboardUserOnline.dtl to show username&lt;/p&gt;
-		&lt;p&gt;Notice: Changes in AgentDashboardUserOnline.dtl to show username&lt;/p&gt;
+        &lt;p&gt;Notice: Changes in AgentTicketZoom.tt due to show the username&lt;/p&gt;
+		&lt;p&gt;Notice: Changes in AgentDashboardUserOnline.tt to show the username&lt;/p&gt;
+		&lt;p&gt;Notice: Changes in AgentDashboardUserOnline.tt to show the username&lt;/p&gt;
         &lt;br/&gt;
         &lt;br/&gt;
     </IntroInstall>
     <PackageRequired Version="1.0.0">Znuny4OTRS-Repo</PackageRequired>
     <Filelist>
-        <File Location="Kernel/Output/HTML/Standard/AgentDashboardUserOnline.dtl" Permission="644"></File>
-        <File Location="Kernel/Output/HTML/Standard/AgentTicketZoom.dtl" Permission="644"></File>
-        <File Location="Kernel/Output/HTML/Standard/AgentDashboardUserOutOfOffice.dtl" Permission="644"></File>
+        <File Location="Kernel/Output/HTML/Standard/AgentDashboardUserOnline.tt" Permission="644"></File>
+        <File Location="Kernel/Output/HTML/Standard/AgentTicketZoom.tt" Permission="644"></File>
+        <File Location="Kernel/Output/HTML/Standard/AgentDashboardUserOutOfOffice.tt" Permission="644"></File>
     </Filelist>
 </otrs_package>
