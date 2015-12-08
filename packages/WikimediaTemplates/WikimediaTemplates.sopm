@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.1">
     <Name>WikimediaTemplates</Name>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <Vendor>Wikimedia Foundation, Inc.</Vendor>
     <URL>https://wikitech.wikimedia.org/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
     <Description Lang="en">Wikimedia changes to templates</Description>
-    <Framework>4.0.x</Framework>
+    <Framework>5.0.x</Framework>
     <IntroInstall Lang="en" Title="Pre-Install Information" Type="pre">
         &lt;br/&gt;
         &lt;br/&gt;
@@ -24,10 +24,9 @@
         &lt;br/&gt;
         &lt;br/&gt;
     </IntroInstall>
-    <PackageRequired Version="1.0.0">Znuny4OTRS-Repo</PackageRequired>
     <Filelist>
-        <File Location="Custom/Kernel/Output/HTML/Standard/AgentDashboardUserOnline.tt" Permission="644"></File>
-        <File Location="Custom/Kernel/Output/HTML/Standard/AgentTicketZoom.tt" Permission="644"></File>
-        <File Location="Custom/Kernel/Output/HTML/Standard/AgentDashboardUserOutOfOffice.tt" Permission="644"></File>
+        <File Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentDashboardUserOnline.tt" Permission="644"></File>
+        <File Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentTicketZoom.tt" Permission="644"></File>
+        <File Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentDashboardUserOutOfOffice.tt" Permission="644"></File>
     </Filelist>
 </otrs_package>
