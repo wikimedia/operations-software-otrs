@@ -19,8 +19,10 @@
         &lt;br/&gt;
         &lt;br/&gt;
         &lt;p&gt;Notice: Changes in AgentTicketZoom.tt due to show the username&lt;/p&gt;
-		&lt;p&gt;Notice: Changes in AgentDashboardUserOnline.tt to show the username&lt;/p&gt;
-		&lt;p&gt;Notice: Changes in AgentDashboardUserOnline.tt to show the username&lt;/p&gt;
+        &lt;p&gt;Notice: Changes in AgentTicketZoom.tt due to remove linking to CustomerID&lt;/p&gt;
+        &lt;p&gt;Notice: Changes in AgentDashboardUserOutoOfOffice.tt to show the username&lt;/p&gt;
+        &lt;p&gt;Notice: Changes in AgentDashboardUserOnline.tt to show the username&lt;/p&gt;
+        &lt;p&gt;Notice: Changes in AgentDashboardUserOnline.tt to hide agent out of office&lt;/p&gt;
         &lt;br/&gt;
         &lt;br/&gt;
     </IntroInstall>
