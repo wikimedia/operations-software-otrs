@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.1">
     <Name>WikimediaTemplates</Name>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <Vendor>Wikimedia Foundation, Inc.</Vendor>
     <URL>https://wikitech.wikimedia.org/</URL>
-    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+    <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, May 2017</License>
     <Description Lang="en">Wikimedia changes to templates</Description>
     <Framework>5.0.x</Framework>
     <IntroInstall Lang="en" Title="Pre-Install Information" Type="pre">
@@ -18,11 +18,11 @@
         &lt;/p&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        &lt;p&gt;Notice: Changes in AgentTicketZoom.tt due to show the username&lt;/p&gt;
-        &lt;p&gt;Notice: Changes in AgentTicketZoom.tt due to remove linking to CustomerID&lt;/p&gt;
-        &lt;p&gt;Notice: Changes in AgentDashboardUserOutoOfOffice.tt to show the username&lt;/p&gt;
-        &lt;p&gt;Notice: Changes in AgentDashboardUserOnline.tt to show the username&lt;/p&gt;
-        &lt;p&gt;Notice: Changes in AgentDashboardUserOnline.tt to hide agent out of office&lt;/p&gt;
+        &lt;p&gt;Notice: Change AgentTicketZoom.tt to show the username&lt;/p&gt;
+        &lt;p&gt;Notice: Change AgentTicketZoom.tt to remove link to CustomerID&lt;/p&gt;
+        &lt;p&gt;Notice: Change AgentDashboardUserOutoOfOffice.tt to show the username&lt;/p&gt;
+        &lt;p&gt;Notice: Change AgentDashboardUserOnline.tt to show the username&lt;/p&gt;
+        &lt;p&gt;Notice: Change AgentDashboardUserOnline.tt to hide agent out of office&lt;/p&gt;
         &lt;br/&gt;
         &lt;br/&gt;
     </IntroInstall>
