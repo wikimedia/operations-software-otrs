@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <otrs_package version="1.1">
     <Name>WikimediaTemplates</Name>
-    <Version>1.0.15</Version>
+    <Version>1.0.16</Version>
     <Vendor>Wikimedia Foundation, Inc.</Vendor>
     <URL>https://wikitech.wikimedia.org/</URL>
     <License>GNU GENERAL PUBLIC LICENSE Version 3, Sep 2018</License>
     <Description Lang="en">Wikimedia changes to templates</Description>
-    <Framework>5.0.x</Framework>
+    <Framework>6.0.x</Framework>
+    <ChangeLog> Version="1.0.16" Date="2020-07-29 12:28:00">Update to support OTRS 6</ChangeLog>
     <IntroInstall Lang="en" Title="Pre-Install Information" Type="pre">
         &lt;br/&gt;
         &lt;br/&gt;
@@ -18,8 +19,8 @@
         &lt;/p&gt;
         &lt;br/&gt;
         &lt;br/&gt;
-        &lt;p&gt;Notice: Change AgentTicketZoom.tt to show the username&lt;/p&gt;
-        &lt;p&gt;Notice: Change AgentTicketZoom.tt to remove link to CustomerID&lt;/p&gt;
+        &lt;p&gt;Notice: Change AgentTicketZoom/TicketInformation.tt to show the username&lt;/p&gt;
+        &lt;p&gt;Notice: Change AgentTicketZoom/TickerInformation.tt to remove link to CustomerID&lt;/p&gt;
         &lt;p&gt;Notice: Change AgentDashboardUserOutoOfOffice.tt to show the username&lt;/p&gt;
         &lt;p&gt;Notice: Change AgentDashboardUserOnline.tt to show the username&lt;/p&gt;
         &lt;p&gt;Notice: Change AgentDashboardUserOnline.tt to hide agent out of office&lt;/p&gt;
@@ -28,7 +29,7 @@
     </IntroInstall>
     <Filelist>
         <File Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentDashboardUserOnline.tt" Permission="644"></File>
-        <File Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentTicketZoom.tt" Permission="644"></File>
+        <File Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentTicketZoom/TicketInformation.tt" Permission="644"></File>
         <File Location="Custom/Kernel/Output/HTML/Templates/Standard/AgentDashboardUserOutOfOffice.tt" Permission="644"></File>
     </Filelist>
 </otrs_package>
